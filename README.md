@@ -20,7 +20,9 @@ timestamp: Date (not required)
 ### POST
 
 ```
-POST /api/create http://localhost:3000/api/create
+POST /api/create http://localhost:3001/api/create
+Live URL:
+POST /api/create http://13.127.83.183:3001/api/create
 ```
 
 Example payload:
@@ -49,9 +51,9 @@ Example payload:
 ### GET
 
 ```
-GET api/find/{key} http://localhost:3000/api/find/:{key}
+GET api/find/{key} http://13.127.83.183:3001/api/find/:{key}
 
-GET /api/find/{key}?timestamp={unixTimestamp}  http://localhost:3000/api/:key?timestamp=############
+GET /api/find/{key}?timestamp={unixTimestamp}  http://13.127.83.183:3001/api/:key?timestamp=############
 ```
 
 ## Setting Up (If needed)
