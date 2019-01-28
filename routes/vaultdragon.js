@@ -37,7 +37,7 @@ router.get('/find/:key?', function (req, res, next) {
     const key = req.params.key;
     const timestamp = req.query.timestamp;
     if (!key) {
-      res.status(500).send(`Missing Key: ${key}`);
+      res.status(422).send(`Missing Key: ${key}`);
     }
     const mangoQuery = {
       selector: {
@@ -52,7 +52,6 @@ router.get('/find/:key?', function (req, res, next) {
     };
     if (timestamp) {
       // timestamp is available
-      // lets convert timestamp to utc;
       const ts = moment.unix(timestamp).utc();
       if (ts.isValid()) {
         mangoQuery.selector.$and.push({
@@ -61,19 +60,21 @@ router.get('/find/:key?', function (req, res, next) {
           }
         });
       } else {
-       return res.status(500).send(`Provided timestamp is not valid`);
+       return res.status(422).send(`Provided timestamp is not valid`);
       }
     }
-    // if timestamp is available, lets query less than or equal to timestamp.
-    // ie. if timestamp given is 6.04, it will find the record 6.04 or earlier.
-    //
     const parameters = {};
     couch.mango(constant.DATABASE_NAME, mangoQuery, parameters).then(({
       data,
       headers,
       status
     }) => {
-      res.status(200).send(data.docs);
+      if(data.docs.length > 0){
+        res.status(200).send(data.docs);
+      }
+      else{
+        res.status(204).send("No data found");
+      }
     }, err => {
       // either request error occured
       res.status(500).send(err);
